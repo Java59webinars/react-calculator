@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useState, useRef} from "react";
-import Buttons from "./Buttons";
-import Table from "./Table";
-import {Calculator} from "./Calculator";
-import {parseInput} from "./utils.js";
+import Buttons from "./components/Buttons.jsx";
+import Table from "./components/Table.jsx";
+import {Calculator} from "./components/Calculator.js";
+import {parseInput} from "./components/utils.js";
 import "./App.css";
 
 
