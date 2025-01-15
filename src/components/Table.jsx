@@ -7,20 +7,20 @@ const Table = ({ rows }) => {
 
     return (
         <table>
-            {/*<thead>*/}
-            {/*<tr>*/}
-            {/*    <th>Operation</th>*/}
-            {/*    <th>Value</th>*/}
-            {/*</tr>*/}
-            {/*</thead>*/}
-            {/*<tbody>*/}
-            {/*{rows.map((row, index) => (*/}
-            {/*    <tr key={index}>*/}
-            {/*        <td>{row.operation}</td>*/}
-            {/*        <td>{row.value}</td>*/}
-            {/*    </tr>*/}
-            {/*))}*/}
-            {/*</tbody>*/}
+            <thead>
+            <tr>
+                <th>Operation</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            {rows.map((row, index) => (
+                <tr key={index}>
+                    <td>{row.operation}</td>
+                    <td>{row.value}</td>
+                </tr>
+            ))}
+            </tbody>
         </table>
     );
 };
