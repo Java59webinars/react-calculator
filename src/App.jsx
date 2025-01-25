@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import Buttons from "./components/Buttons.jsx";
 import CustomTable from "./components/CustomTable.jsx";
 import {Calculator} from "./components/Calculator.js";
@@ -7,13 +7,18 @@ import {parseInput} from "./components/utils.js";
 import {Box, TextField} from "@mui/material";
 import "./App.css";
 
-
-
+const LOCAL_STORAGE_KEY = "calculatorRows";
 
 const App = () => {
+    const [rows, setRows] = useState(() => {
+        const savedRows = localStorage.getItem(LOCAL_STORAGE_KEY);
+        return savedRows ? JSON.parse(savedRows) : [];
+    });
     const [inputValue, setInputValue] = useState(0);
-    const [rows, setRows] = useState([]); //History of operation for the table
-   const calculator = useRef(new Calculator()); // Постоянный экземпляр калькулятора
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
+    }, [rows]);
+    const calculator = useRef(new Calculator()); // Постоянный экземпляр калькулятора
     function addRowToTable(firstOperand, lastOperation, secondOperand, result) {
         const row = {
             operation: `${firstOperand} ${lastOperation} ${secondOperand}`,
@@ -22,16 +27,15 @@ const App = () => {
         setRows((prev) => [...prev, row]);
         console.log("Row added to table", row);
     }
-
     const handleButtonClick = (operation) =>{
         try{
             if(operation === "reset"){
                 calculator.current.reset();
                 setInputValue(0);
                 setRows([]);
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
                 console.log("Calculator reset called");
             }
-
             if(operation === "calculate" && !calculator.current.lastOperation){
                 return;
             }

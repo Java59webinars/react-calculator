@@ -9,6 +9,12 @@ import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
+const headerStyles = {
+    backgroundColor: "primary.main",
+    color: "primary.contrastText",
+    fontWeight: "bold",
+    textAlign: "center",
+}
 const CustomTable = ({ rows }) => {
     // Если нет данных, выводим надпись
     if (!rows || rows.length === 0) {
@@ -28,8 +34,12 @@ const CustomTable = ({ rows }) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Operation</TableCell>
-                        <TableCell>Value</TableCell>
+                        <TableCell
+                        sx={headerStyles}
+                        >Operation</TableCell>
+                        <TableCell
+                            sx={headerStyles}
+                        >Value</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
