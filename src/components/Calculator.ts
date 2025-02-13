@@ -1,49 +1,34 @@
 export class Calculator {
-    lastOperation: keyof Calculator | null;
-    currentValue: number;
-    actions:({
-        label: string; operation: string; className?: string
-    })[];
+    currentValue: number = 0;
+    lastOperation: keyof Calculator | null = null;
 
-    constructor() {
-        this.currentValue = 0; // Текущее значение
-        this.lastOperation = null; // Последняя операция
-        this.actions = [
-            { label: "+", operation: "add" },
-            { label: "-", operation: "subtract" },
-            { label: "*", operation: "multiply" },
-            { label: "/", operation: "divide" },
-            { label: "=", operation: "calculate" },
-            { label: "C", operation: "reset", className: "cancel" },
-        ];
+    operations: Record<string, { label: string; action?: (value: number) => void; className?: string }> = {
+        add: { label: "+", action: (value) => this.currentValue += value  },
+        subtract: { label: "-", action: (value) => this.currentValue -= value },
+        multiply: { label: "*", action: (value) => this.currentValue *= value },
+        divide: { label: "/", action: (value) => {
+                if (value === 0) throw new Error("Cannot divide by zero");
+                this.currentValue /= value
+            }},
+        calculate: { label: "=" }, // Добавляем calculate без action
+        reset: { label: "C", className: "cancel", action: () => this.reset() }, // Добавляем reset
+    };
+
+    getActions(): { label: string; operation: keyof Calculator; className?: string }[] {
+        return Object.entries(this.operations).map(([key, { label, className }]) => ({
+            label,
+            operation: key as keyof Calculator,
+            className,
+        }));
     }
 
-    getActions() {
-        return this.actions;
-    }
-
-    setValues(value: number, operation: keyof Calculator) {
-        this.currentValue = value;
-        this.lastOperation = operation;
-    }
-
-    add(value: number) {
-        this.currentValue += value;
-    }
-
-    subtract(value: number) {
-        this.currentValue -= value;
-    }
-
-    multiply(value: number) {
-        this.currentValue *= value;
-    }
-
-    divide(value: number) {
-        if (value === 0) {
-            throw new Error("Cannot divide by zero");
+    executeOperation(operation: keyof Calculator, value: number) {
+        const operationMethod = this.operations[operation]?.action;
+        if (operationMethod) {
+            operationMethod(value);
+        } else {
+            throw new Error(`Unknown operation: ${operation}`);
         }
-        this.currentValue /= value;
     }
 
     reset() {
@@ -51,19 +36,16 @@ export class Calculator {
         this.lastOperation = null;
     }
 
-    getResult() {
-        return this.currentValue; // Возвращает только результат
+    getResult(): number {
+        return this.currentValue;
     }
 
-    toString() {
-        return ` CurrentVal: ${this.currentValue} LastOperation: ${this.lastOperation}`;
+    setValues(value: number, operation: keyof Calculator) {
+        this.currentValue = value;
+        this.lastOperation = operation;
     }
 
-    executeOperation (operation: keyof Calculator, value: number){
-        if (typeof this[operation] === "function") {
-            (this[operation] as (val: number) => void)(value);
-        } else {
-            throw new Error(`Unexpected operation: ${operation}`);
-        }
+    toString(): string {
+        return `Current Value: ${this.currentValue}, Last Operation: ${this.lastOperation ?? "None"}`;
     }
 }

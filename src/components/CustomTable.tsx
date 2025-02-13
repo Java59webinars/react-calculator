@@ -15,7 +15,7 @@ const headerStyles = {
     fontWeight: "bold",
     textAlign: "center",
 }
-const CustomTable = ({ rows }) => {
+const CustomTable = ({ rows }: CustomTableProps) => {
     // Если нет данных, выводим надпись
     if (!rows || rows.length === 0) {
         return <Typography>No operations to display</Typography>;

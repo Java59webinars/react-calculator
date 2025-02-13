@@ -1,10 +1,11 @@
 import{ useState } from "react";
 import {Button, ButtonGroup} from "@mui/material";
+import {Calculator} from "./Calculator.ts";
 
-const Buttons = ({ buttonData, onButtonClick }) => {
+const Buttons = ({ buttonData, onButtonClick }:ButtonsProps) => {
     // Состояние для отслеживания индекса последней нажатой кнопки
 
-    const [activeIndex, setActiveIndex] = useState(null);
+    const [activeIndex, setActiveIndex] = useState <number | null >(null);
 
     return (
         <ButtonGroup aria-label="button group"
@@ -26,7 +27,7 @@ const Buttons = ({ buttonData, onButtonClick }) => {
                         // чтобы сохранялся «синий» основной цвет
                         color={isCancel ? undefined : "primary"}
                         onClick={() => {
-                            onButtonClick(button.operation);
+                            onButtonClick(button.operation as keyof Calculator);
                             setActiveIndex(index);
                         }}
                         sx={{
