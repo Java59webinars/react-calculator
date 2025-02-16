@@ -17,7 +17,8 @@ const App = () => {
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
     }, [rows]);
-    const calculator = useRef(new Calculator()); // Постоянный экземпляр калькулятора
+    const calculator = useRef(new Calculator());// Постоянный экземпляр калькулятора
+    console.log(calculator.current.operations.multiply);
     function addRowToTable(firstOperand: number, lastOperation: string, secondOperand: number, result: number) {
         const row = {
             operation: `${firstOperand} ${lastOperation} ${secondOperand}`,
