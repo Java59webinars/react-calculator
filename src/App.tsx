@@ -1,4 +1,4 @@
-import  {useState, useRef, useEffect} from "react";
+import {useState, useMemo, useEffect, useCallback} from "react";
 import Buttons from "./components/Buttons.tsx";
 import CustomTable from "./components/CustomTable.tsx";
 import {Calculator} from "./components/Calculator.ts";
@@ -7,6 +7,8 @@ import {Box, TextField} from "@mui/material";
 import "./App.css";
 
 const LOCAL_STORAGE_KEY = "calculatorRows";
+//const getUserId = () => localStorage.getItem("userId") || "guest";
+
 
 const App = () => {
     const [rows, setRows] = useState<TableRow[]>(() => {
@@ -17,8 +19,8 @@ const App = () => {
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
     }, [rows]);
-    const calculator = useRef(new Calculator());// Постоянный экземпляр калькулятора
-    console.log(calculator.current.operations.multiply);
+    const calculator = useMemo(() =>new Calculator(),[]);// Постоянный экземпляр калькулятора
+    console.log(calculator.operations.add);
     function addRowToTable(firstOperand: number, lastOperation: string, secondOperand: number, result: number) {
         const row = {
             operation: `${firstOperand} ${lastOperation} ${secondOperand}`,
@@ -27,37 +29,37 @@ const App = () => {
         setRows((prev) => [...prev, row]);
         console.log("Row added to table", row);
     }
-    const handleButtonClick = (operation: keyof Calculator | "calculate") =>{
+    const handleButtonClick = useCallback( (operation: keyof Calculator | "calculate") =>{
         try{
             if(operation === "reset"){
-                calculator.current.reset();
+                calculator.reset();
                 setInputValue(0);
                 setRows([]);
                 localStorage.removeItem(LOCAL_STORAGE_KEY);
                 console.log("Calculator reset called");
             }
-            if(operation === "calculate" && !calculator.current.lastOperation){
+            if(operation === "calculate" && !calculator.lastOperation){
                 return;
             }
-            if(!calculator.current.lastOperation) {
+            if(!calculator.lastOperation) {
                 const value = parseInput(inputValue);
-                calculator.current.setValues(value, operation as keyof Calculator)
+                calculator.setValues(value, operation as keyof Calculator)
                 return;
             }
             const secondOperand = parseInput(inputValue);
-            const firstOperand = calculator.current.currentValue;
+            const firstOperand = calculator.currentValue;
             //calculator.current[calculator.current.lastOperation](secondOperand);
-            calculator.current.executeOperation(calculator.current.lastOperation, secondOperand);
-            addRowToTable(firstOperand, calculator.current.lastOperation, secondOperand, calculator.current.getResult());
-            setInputValue( calculator.current.getResult());
-            calculator.current.lastOperation = operation !== 'calculate'? operation : null;
+            calculator.executeOperation(calculator.lastOperation, secondOperand);
+            addRowToTable(firstOperand, calculator.lastOperation, secondOperand, calculator.getResult());
+            setInputValue( calculator.getResult());
+            calculator.lastOperation = operation !== 'calculate'? operation : null;
             return;
         } catch (error) {
             if (error instanceof Error){
                 alert(error.message);
             }
         }
-    };
+    },[inputValue, calculator, setRows]);
     return (
         <Box
             sx={{
@@ -97,7 +99,7 @@ const App = () => {
             />
 
             <Buttons
-                buttonData={calculator.current.getActions()}
+                buttonData={calculator.getActions()}
                 onButtonClick={handleButtonClick}
             />
             <CustomTable rows={rows}/>
