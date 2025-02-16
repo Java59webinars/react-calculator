@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
 const AUTH_TOKEN_KEY = "authToken";
 
-const withAuth = <P extends object>(Component: React.ComponentType<P>) => {
+const withAuth = <P extends object>(Component: React.ComponentType) => {
     return function ProtectedComponent(props: P) {
         const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 

@@ -22,7 +22,16 @@ const LoginPage =() => {
     };
 
     return (
-        <Box>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "100vh",
+                gap: "10px",
+            }}
+        >
             <Typography variant="h4">Enter to calculator</Typography>
             <TextField
                 label="Login"
@@ -36,7 +45,7 @@ const LoginPage =() => {
                 onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
             />
-            <Button variant="contained" onClick={handleLogin}></Button>
+            <Button variant="contained" onClick={handleLogin}>Enter</Button>
         </Box>
     );
 };
