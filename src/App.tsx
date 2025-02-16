@@ -3,12 +3,19 @@ import Buttons from "./components/Buttons.tsx";
 import CustomTable from "./components/CustomTable.tsx";
 import {Calculator} from "./components/Calculator.ts";
 import {parseInput} from "./components/utils.ts";
-import {Box, TextField} from "@mui/material";
+import {Box, Button, TextField} from "@mui/material";
 import "./App.css";
+import {useNavigate} from "react-router-dom";
 
 const LOCAL_STORAGE_KEY = "calculatorRows";
 
 const App = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        navigate("/login");
+    };
     const [rows, setRows] = useState<TableRow[]>(() => {
         const savedRows = localStorage.getItem(LOCAL_STORAGE_KEY);
         return savedRows ? JSON.parse(savedRows) : [];
@@ -70,6 +77,7 @@ const App = () => {
                 flexDirection: "column",
                 gap: "10px"
             }}>
+            <Button onClick={handleLogout} variant="outlined">Выйти</Button>
             <TextField
                 label="Enter a number"
                 value={inputValue}
