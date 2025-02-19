@@ -1,40 +1,26 @@
-import {useState, useMemo, useEffect, useCallback} from "react";
+import {useState, useMemo, useCallback} from "react";
 import Buttons from "./components/Buttons.tsx";
 import CustomTable from "./components/CustomTable.tsx";
 import {Calculator} from "./components/Calculator.ts";
-import {parseInput, LOCAL_STORAGE_KEY} from "./components/utils.ts";
+import {parseInput} from "./components/utils.ts";
+import {useTableRows} from "./components/useTableRows.ts";
 import {themeStyles} from "./components/themes.ts";
 import {Box, TextField} from "@mui/material";
 import "./App.css";
 
 const App = () => {
-    const [rows, setRows] = useState<TableRow[]>(() => {
-        const savedRows = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return savedRows ? JSON.parse(savedRows) : [];
-    });
+    const { rows, addRowToTable, resetRows } = useTableRows();
     const [inputValue, setInputValue] = useState<number | string>(0);
 
-    useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
-    }, [rows]);
-
     const calculator = useMemo(() => new Calculator(), []);
-
-    function addRowToTable(firstOperand: number, lastOperation: string, secondOperand: number, result: number) {
-        const row = {
-            operation: `${firstOperand} ${lastOperation} ${secondOperand}`,
-            value: result
-        };
-        setRows((prev) => [...prev, row]);
-    }
 
     const handleButtonClick = useCallback((operation: keyof Calculator | "calculate") => {
         try {
             if (operation === "reset") {
                 calculator.reset();
                 setInputValue(0);
-                setRows([]);
-                localStorage.removeItem(LOCAL_STORAGE_KEY);
+                resetRows();
+                return;
             }
             if (operation === "calculate" && !calculator.lastOperation) {
                 return;
@@ -55,7 +41,7 @@ const App = () => {
                 alert(error.message);
             }
         }
-    }, [inputValue, calculator, setRows]);
+    }, [inputValue, calculator, addRowToTable, resetRows]);
 
     return (
         <Box sx={themeStyles.app.container}>
