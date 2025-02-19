@@ -22,19 +22,22 @@ const App = () => {
                 resetRows();
                 return;
             }
-            if (operation === "calculate" && !calculator.lastOperation) {
-                return;
-            }
+
+            const value = parseInput(inputValue);
+
             if (!calculator.lastOperation) {
-                const value = parseInput(inputValue);
+                // Если предыдущей операции нет, сохраняем текущий ввод и операцию
                 calculator.setValues(value, operation as keyof Calculator);
                 return;
             }
-            const secondOperand = parseInput(inputValue);
+
+            // Если предыдущая операция есть, выполняем её и добавляем результат в таблицу
             const firstOperand = calculator.currentValue;
-            calculator.executeOperation(calculator.lastOperation, secondOperand);
-            addRowToTable(firstOperand, calculator.lastOperation, secondOperand, calculator.getResult());
+            calculator.executeOperation(calculator.lastOperation, value);
+            addRowToTable(firstOperand, calculator.lastOperation, value, calculator.getResult());
             setInputValue(calculator.getResult());
+
+            // Если нажата не кнопка "=", сохраняем операцию для следующего вычисления
             calculator.lastOperation = operation !== 'calculate' ? operation : null;
         } catch (error) {
             if (error instanceof Error) {
