@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {Button, ButtonGroup} from "@mui/material";
 import {Calculator} from "./Calculator.ts";
-import {themeStyles} from "./themes.ts";
+import {themeStyles} from "../services/themes.ts";
 
 const Buttons = ({buttonData, onButtonClick}: ButtonsProps) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);

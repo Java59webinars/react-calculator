@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { AUTH_TOKEN_KEY } from "./utils.ts";
+import { AUTH_TOKEN_KEY } from "../services/utils.ts";
 
 const withAuth = <P extends object>(Component: React.ComponentType) => {
     return function ProtectedComponent(props: P) {

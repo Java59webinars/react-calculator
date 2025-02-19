@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { AUTH_TOKEN_KEY, USER_ID_KEY } from "./utils.ts";
+import { AUTH_TOKEN_KEY, USER_ID_KEY } from "../services/utils.ts";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");

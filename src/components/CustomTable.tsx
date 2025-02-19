@@ -6,7 +6,7 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import {themeStyles} from "./themes.ts";
+import {themeStyles} from "../services/themes.ts";
 
 const CustomTable = ({rows}: CustomTableProps) => {
     if (!rows || rows.length === 0) {
