@@ -1,11 +1,8 @@
-// Ключ для хранения токена аутентификации
 export const AUTH_TOKEN_KEY = "authToken";
-// Ключ для хранения ID пользователя
 export const USER_ID_KEY = "userId";
 
 /**
  * Генерирует уникальный ключ для хранения таблицы пользователя
- * Пример: "calculatorRows_admin"
  */
 export const getUserStorageKey = (userId: string): string => {
     return `calculatorRows_${userId}`;
@@ -20,4 +17,12 @@ export const parseInput = (input: number | string): number => {
         throw new Error("Invalid input: must be a number");
     }
     return value;
+};
+
+/**
+ * Выход пользователя из системы: удаляет токен и userId, но сохраняет данные
+ */
+export const logoutUser = () => {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(USER_ID_KEY);
 };

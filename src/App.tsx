@@ -1,18 +1,21 @@
 import { useState, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Buttons from "./components/Buttons.tsx";
 import CustomTable from "./components/CustomTable.tsx";
 import { Calculator } from "./components/Calculator.ts";
-import { parseInput, USER_ID_KEY } from "./components/utils.ts";
-import { useTableRows } from ".//components/useTableRows.ts";
+import { parseInput, USER_ID_KEY, logoutUser } from "./components/utils.ts";
+import { useTableRows } from "./components/useTableRows.ts";
 import { themeStyles } from "./components/themes.ts";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography, Button } from "@mui/material";
 import "./App.css";
 
 const App = () => {
+    const navigate = useNavigate(); // Хук для перенаправления на другую страницу
+
     // Получаем userId из localStorage (может быть null)
     const userId = localStorage.getItem(USER_ID_KEY);
 
-    // Хук вызывается всегда, но если userId нет — передаём пустую строку или заглушку
+    // Хук вызывается всегда, даже если нет userId
     const { rows, addRowToTable, resetRows } = useTableRows(userId || "guest");
 
     const [inputValue, setInputValue] = useState<number | string>(0);
@@ -47,6 +50,12 @@ const App = () => {
         }
     }, [inputValue, calculator, addRowToTable, resetRows]);
 
+    // Функция выхода из системы
+    const handleLogout = () => {
+        logoutUser(); // Удаляем токен и userId
+        navigate("/login"); // Перенаправляем пользователя на страницу входа
+    };
+
     // Если нет userId, показываем сообщение об ошибке
     if (!userId) {
         return <Typography variant="h5" color="error">User is not authenticated</Typography>;
@@ -54,6 +63,11 @@ const App = () => {
 
     return (
         <Box sx={themeStyles.app.container}>
+            {/* Кнопка Logout */}
+            <Button variant="outlined" color="error" onClick={handleLogout} sx={{ alignSelf: "flex-end" }}>
+                Logout
+            </Button>
+
             <TextField
                 label="Enter a number"
                 value={inputValue}
