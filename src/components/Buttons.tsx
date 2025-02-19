@@ -1,16 +1,13 @@
-import{ useState } from "react";
+import {useState} from "react";
 import {Button, ButtonGroup} from "@mui/material";
 import {Calculator} from "./Calculator.ts";
+import {themeStyles} from "./themes.ts";
 
-const Buttons = ({ buttonData, onButtonClick }:ButtonsProps) => {
-    // Состояние для отслеживания индекса последней нажатой кнопки
-
-    const [activeIndex, setActiveIndex] = useState <number | null >(null);
+const Buttons = ({buttonData, onButtonClick}: ButtonsProps) => {
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     return (
-        <ButtonGroup aria-label="button group"
-                     sx={{ width: "100%" }}
-        >
+        <ButtonGroup aria-label="button group" sx={themeStyles.buttons.buttonGroup}>
             {buttonData.map((button, index) => {
                 const isActive = index === activeIndex;
                 const isCancel = button.className === "cancel";
@@ -18,42 +15,13 @@ const Buttons = ({ buttonData, onButtonClick }:ButtonsProps) => {
                 return (
                     <Button
                         key={index}
-                        variant={
-                            // Если кнопка «cancel», всегда делаем "contained"
-                            // (красный фон), иначе используем логику isActive
-                            isCancel ? "contained" : isActive ? "contained" : "outlined"
-                        }
-                        // Если не cancel-кнопка, цвет = "primary",
-                        // чтобы сохранялся «синий» основной цвет
+                        variant={isCancel ? "contained" : isActive ? "contained" : "outlined"}
                         color={isCancel ? undefined : "primary"}
                         onClick={() => {
                             onButtonClick(button.operation as keyof Calculator);
                             setActiveIndex(index);
                         }}
-                        sx={{
-
-                            ...(isCancel
-                                ? {
-                                    backgroundColor: "red",
-                                    color: "white",
-                                    borderColor: "primary.main",
-                                    "&:hover": {
-                                        backgroundColor: "darkred",
-                                    },
-                                }
-                                : {
-                                    // Стили для обычной кнопки (как раньше)
-                                    // «Активная» (isActive) => "contained primary",
-                                    // «Неактивная» => "outlined" с белым фоном, синим текстом
-                                    backgroundColor: isActive ? undefined : "white",
-                                    color: isActive ? undefined : "primary.main",
-                                    borderColor: "primary.main",
-                                    "&:hover": {
-                                        backgroundColor: isActive ? "primary.dark" : "#f5f5f5",
-                                    },
-                                }),
-                            flex: 1,
-                        }}
+                        sx={isCancel ? themeStyles.buttons.cancelButton : isActive ? themeStyles.buttons.activeButton : themeStyles.buttons.defaultButton}
                     >
                         {button.label}
                     </Button>

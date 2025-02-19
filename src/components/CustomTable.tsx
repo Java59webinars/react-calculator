@@ -1,5 +1,3 @@
-
-// Компоненты таблицы из MUI
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -8,38 +6,20 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import {themeStyles} from "./themes.ts";
 
-const headerStyles = {
-    backgroundColor: "primary.main",
-    color: "primary.contrastText",
-    fontWeight: "bold",
-    textAlign: "center",
-}
-const CustomTable = ({ rows }: CustomTableProps) => {
-    // Если нет данных, выводим надпись
+const CustomTable = ({rows}: CustomTableProps) => {
     if (!rows || rows.length === 0) {
         return <Typography>No operations to display</Typography>;
     }
 
     return (
-        // TableContainer + Paper придают «материальную» карточку
-        <TableContainer component={Paper}
-                        sx={{
-                            // По желанию добавим синюю рамку, чтобы стилизовать под ваши кнопки
-                            border: "1px solid",
-                            borderColor: "primary.main",
-                            boxShadow: 2,
-                        }}
-        >
+        <TableContainer component={Paper} sx={themeStyles.table.container}>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell
-                        sx={headerStyles}
-                        >Operation</TableCell>
-                        <TableCell
-                            sx={headerStyles}
-                        >Value</TableCell>
+                        <TableCell sx={themeStyles.table.headerCell}>Operation</TableCell>
+                        <TableCell sx={themeStyles.table.headerCell}>Value</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
