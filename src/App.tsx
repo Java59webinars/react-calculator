@@ -7,7 +7,7 @@ import {Box, TextField} from "@mui/material";
 import "./App.css";
 
 const LOCAL_STORAGE_KEY = "calculatorRows";
-//const getUserId = () => localStorage.getItem("userId") || "guest";
+
 
 
 const App = () => {
