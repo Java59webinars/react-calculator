@@ -1,17 +1,21 @@
-import {useState, useMemo, useCallback} from "react";
+import { useState, useMemo, useCallback } from "react";
 import Buttons from "./components/Buttons.tsx";
 import CustomTable from "./components/CustomTable.tsx";
-import {Calculator} from "./components/Calculator.ts";
-import {parseInput} from "./components/utils.ts";
-import {useTableRows} from "./components/useTableRows.ts";
-import {themeStyles} from "./components/themes.ts";
-import {Box, TextField} from "@mui/material";
+import { Calculator } from "./components/Calculator.ts";
+import { parseInput, USER_ID_KEY } from "./components/utils.ts";
+import { useTableRows } from ".//components/useTableRows.ts";
+import { themeStyles } from "./components/themes.ts";
+import { Box, TextField, Typography } from "@mui/material";
 import "./App.css";
 
 const App = () => {
-    const { rows, addRowToTable, resetRows } = useTableRows();
-    const [inputValue, setInputValue] = useState<number | string>(0);
+    // Получаем userId из localStorage (может быть null)
+    const userId = localStorage.getItem(USER_ID_KEY);
 
+    // Хук вызывается всегда, но если userId нет — передаём пустую строку или заглушку
+    const { rows, addRowToTable, resetRows } = useTableRows(userId || "guest");
+
+    const [inputValue, setInputValue] = useState<number | string>(0);
     const calculator = useMemo(() => new Calculator(), []);
 
     const handleButtonClick = useCallback((operation: keyof Calculator | "calculate") => {
@@ -26,18 +30,15 @@ const App = () => {
             const value = parseInput(inputValue);
 
             if (!calculator.lastOperation) {
-                // Если предыдущей операции нет, сохраняем текущий ввод и операцию
                 calculator.setValues(value, operation as keyof Calculator);
                 return;
             }
 
-            // Если предыдущая операция есть, выполняем её и добавляем результат в таблицу
             const firstOperand = calculator.currentValue;
             calculator.executeOperation(calculator.lastOperation, value);
             addRowToTable(firstOperand, calculator.lastOperation, value, calculator.getResult());
             setInputValue(calculator.getResult());
 
-            // Если нажата не кнопка "=", сохраняем операцию для следующего вычисления
             calculator.lastOperation = operation !== 'calculate' ? operation : null;
         } catch (error) {
             if (error instanceof Error) {
@@ -45,6 +46,11 @@ const App = () => {
             }
         }
     }, [inputValue, calculator, addRowToTable, resetRows]);
+
+    // Если нет userId, показываем сообщение об ошибке
+    if (!userId) {
+        return <Typography variant="h5" color="error">User is not authenticated</Typography>;
+    }
 
     return (
         <Box sx={themeStyles.app.container}>
@@ -59,7 +65,7 @@ const App = () => {
                 buttonData={calculator.getActions()}
                 onButtonClick={handleButtonClick}
             />
-            <CustomTable rows={rows}/>
+            <CustomTable rows={rows} />
         </Box>
     );
 };

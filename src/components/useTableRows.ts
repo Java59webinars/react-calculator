@@ -1,18 +1,22 @@
-// useTableRows.ts
+import { useState, useEffect } from "react";
+import { getUserStorageKey } from "./utils.ts";
 
-import {useState, useEffect} from "react";
-import {LOCAL_STORAGE_KEY} from "./utils.ts";
+export const useTableRows = (userId: string) => {
+    // Получаем уникальный ключ для текущего пользователя
+    const storageKey = getUserStorageKey(userId);
 
-export const useTableRows = () => {
+    // 1. Инициализация состояния rows
     const [rows, setRows] = useState<TableRow[]>(() => {
-        const savedRows = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const savedRows = localStorage.getItem(storageKey);
         return savedRows ? JSON.parse(savedRows) : [];
     });
 
+    // 2. Синхронизация с localStorage
     useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rows));
-    }, [rows]);
+        localStorage.setItem(storageKey, JSON.stringify(rows));
+    }, [rows, storageKey]);
 
+    // 3. Добавление новой строки в таблицу
     const addRowToTable = (firstOperand: number, lastOperation: string, secondOperand: number, result: number) => {
         const row = {
             operation: `${firstOperand} ${lastOperation} ${secondOperand}`,
@@ -21,10 +25,12 @@ export const useTableRows = () => {
         setRows((prev) => [...prev, row]);
     };
 
+    // 4. Сброс таблицы
     const resetRows = () => {
         setRows([]);
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
+        localStorage.removeItem(storageKey);
     };
 
+    // Возвращаем функции и состояние для использования в компоненте
     return { rows, addRowToTable, resetRows };
 };
