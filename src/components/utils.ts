@@ -1,12 +1,12 @@
-export function parseInput(input: number | string | null) {
-    if (input === '' || input === null) {
-        return 0;  // Если поле пустое или null, возвращаем 0
-    }
-    const number = typeof input === 'number' ? input : parseFloat(input);
+// Local storage keys
+export const LOCAL_STORAGE_KEY = "calculatorRows";
+export const AUTH_TOKEN_KEY = "authToken";
 
-    console.log("number", number,'input', input);
-    if (isNaN(number)) {
-        throw new Error('Invalid input. Please enter a valid number.');
+// Общие функции (оставил существующие)
+export const parseInput = (input: number | string): number => {
+    const value = Number(input);
+    if (isNaN(value)) {
+        throw new Error("Invalid input: must be a number");
     }
-    return number;
-}
+    return value;
+};

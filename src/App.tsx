@@ -2,13 +2,9 @@ import {useState, useMemo, useEffect, useCallback} from "react";
 import Buttons from "./components/Buttons.tsx";
 import CustomTable from "./components/CustomTable.tsx";
 import {Calculator} from "./components/Calculator.ts";
-import {parseInput} from "./components/utils.ts";
+import {LOCAL_STORAGE_KEY, parseInput} from "./components/utils.ts";
 import {Box, TextField} from "@mui/material";
 import "./App.css";
-
-const LOCAL_STORAGE_KEY = "calculatorRows";
-
-
 
 const App = () => {
     const [rows, setRows] = useState<TableRow[]>(() => {

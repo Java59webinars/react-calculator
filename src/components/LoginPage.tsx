@@ -2,8 +2,8 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Box, Button, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import {AUTH_TOKEN_KEY} from "./utils.ts";
 
-const AUTH_TOKEN_KEY = "authToken";
 const LoginPage =() => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
