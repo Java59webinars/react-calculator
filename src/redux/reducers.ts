@@ -1,4 +1,5 @@
-import { TableActionTypes, TableRow, INITIALIZE_TABLE, ADD_ROW, RESET_TABLE } from "./actions.ts";
+import { TableRow, INITIALIZE_TABLE, ADD_ROW, RESET_TABLE } from "./actions.ts";
+import {AnyAction} from "redux";
 
 // Интерфейс состояния таблицы
 interface TableState {
@@ -10,8 +11,8 @@ const initialState: TableState = {
     rows: []
 };
 
-// Редьюсер таблицы
-export const tableReducer = (state = initialState, action: TableActionTypes): TableState => {
+// Reducer таблицы
+export const tableReducer = (state = initialState, action: AnyAction): TableState => {
     switch (action.type) {
         case INITIALIZE_TABLE:
             return { ...state, rows: action.payload };

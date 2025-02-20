@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { AUTH_TOKEN_KEY } from "../services/utils.ts";
 
-const withAuth = <P extends object>(Component: React.ComponentType) => {
-    return function ProtectedComponent(props: P) {
+const withAuth = (Component: React.ComponentType) => {
+    return function ProtectedComponent() {
         const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
         useEffect(() => {
@@ -15,7 +15,7 @@ const withAuth = <P extends object>(Component: React.ComponentType) => {
             return <div>Loading...</div>;
         }
 
-        return isAuthenticated ? <Component {...props} /> : <Navigate to="/login" />;
+        return isAuthenticated ? <Component  /> : <Navigate to="/login" />;
     };
 };
 
