@@ -1,27 +1,49 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Buttons from "./Buttons.tsx";
 import CustomTable from "./CustomTable.tsx";
 import { Calculator } from "./Calculator.ts";
-import { parseInput, USER_ID_KEY, logoutUser } from "../services/utils.ts";
-import { useTableRows } from "../services/useTableRows.ts";
+import { parseInput, USER_ID_KEY, logoutUser, getUserStorageKey } from "../services/utils.ts";
+import { initializeTable, addRow, resetTable, TableRow } from "../redux/actions.ts";
+import { RootState } from "../redux/store.ts";
 import { themeStyles } from "../services/themes.ts";
 import { Box, TextField, Typography, Button } from "@mui/material";
 
 const CalculatorPage = () => {
     const userId = localStorage.getItem(USER_ID_KEY);
 
-    // Используем кастомный хук useTableRows
-    const { rows, addRowToTable, resetRows } = useTableRows(userId);
+    // Доступ к состоянию через Redux
+    const rows = useSelector((state: RootState) => state.rows);
+    const dispatch = useDispatch();
 
     const [inputValue, setInputValue] = useState<number | string>(0);
     const calculator = useMemo(() => new Calculator(), []);
+
+    // Инициализация таблицы при монтировании компонента
+    useEffect(() => {
+        if (userId) {
+            const storageKey = getUserStorageKey(userId);
+            const savedRows = localStorage.getItem(storageKey);
+            if (savedRows) {
+                dispatch(initializeTable(JSON.parse(savedRows)));
+            }
+        }
+    }, [dispatch, userId]);
+
+    // Синхронизация данных с localStorage при изменении rows
+    useEffect(() => {
+        if (userId) {
+            const storageKey = getUserStorageKey(userId);
+            localStorage.setItem(storageKey, JSON.stringify(rows));
+        }
+    }, [rows, userId]);
 
     const handleButtonClick = useCallback((operation: keyof Calculator | "calculate") => {
         try {
             if (operation === "reset") {
                 calculator.reset();
                 setInputValue(0);
-                resetRows();
+                dispatch(resetTable());
                 return;
             }
 
@@ -34,7 +56,11 @@ const CalculatorPage = () => {
 
             const firstOperand = calculator.currentValue;
             calculator.executeOperation(calculator.lastOperation, value);
-            addRowToTable(firstOperand, calculator.lastOperation, value, calculator.getResult());
+            const newRow: TableRow = {
+                operation: `${firstOperand} ${calculator.lastOperation} ${value}`,
+                value: calculator.getResult()
+            };
+            dispatch(addRow(newRow));
             setInputValue(calculator.getResult());
 
             calculator.lastOperation = operation !== "calculate" ? operation : null;
@@ -43,7 +69,7 @@ const CalculatorPage = () => {
                 alert(error.message);
             }
         }
-    }, [inputValue, calculator, addRowToTable, resetRows]);
+    }, [inputValue, calculator, dispatch]);
 
     const handleLogout = () => {
         logoutUser();

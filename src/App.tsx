@@ -4,7 +4,7 @@ import LoginPage from "./components/LoginPage.tsx";
 import CalculatorPage from "./components/CalculatorPage.tsx";
 import "./App.css";
 
-// Оборачиваем калькулятор в HOC для проверки аутентификации
+// Оборачиваем калькулятор в HOC для защиты маршрута
 const ProtectedCalculator = withAuth(CalculatorPage);
 
 const App = () => {
