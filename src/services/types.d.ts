@@ -1,4 +1,4 @@
-import {Calculator} from "../components/Calculator.ts";
+import {Calculator} from "./Calculator.ts";
 
 declare global{
     type TableRow = {

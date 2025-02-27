@@ -1,11 +1,11 @@
-// store.ts
+import { configureStore } from "@reduxjs/toolkit";
+import tableReducer from "./tableSlice";
 
-import { createStore } from "redux";
-import { tableReducer } from "./reducers.ts";
+export const store = configureStore({
+    reducer: {
+        table: tableReducer,
+    },
+});
 
-// Создаём Redux Store
-export const store = createStore(tableReducer);
-
-// Типы для хуков
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

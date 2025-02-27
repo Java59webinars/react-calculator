@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Button, ButtonGroup} from "@mui/material";
-import {Calculator} from "./Calculator.ts";
+import {Calculator} from "../services/Calculator.ts";
 import {themeStyles} from "../services/themes.ts";
 
 const Buttons = ({buttonData, onButtonClick}: ButtonsProps) => {
