@@ -1,5 +1,3 @@
-import {Calculator} from "./Calculator.ts";
-
 declare global{
     type TableRow = {
         operation: string;
@@ -10,18 +8,10 @@ declare global{
         rows: TableRow[];
     }
 
-    interface ButtonProps {
-        label: string;
-        operation: keyof Calculator | string;
-        className?: string;
+    interface CalculatorInputProps {
+        inputValue: string | number;
+        setInputValue: (value: string | number) => void;
     }
-
-    interface ButtonsProps {
-      buttonData: ButtonProps[];
-      onButtonClick: (operation: keyof Calculator) => void;
-    }
-
-
 
 }
 export {};

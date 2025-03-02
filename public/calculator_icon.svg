@@ -1,0 +1,30 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 64 64"
+    width="64"
+    height="64"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+>
+    <!-- Фон калькулятора -->
+    <rect x="8" y="4" width="48" height="56" rx="6" ry="6" fill="#444" stroke="none"/>
+    
+    <!-- Экран -->
+    <rect x="14" y="8" width="36" height="12" rx="2" ry="2" fill="#ccc" stroke="none"/>
+    
+    <!-- Кнопки -->
+    <circle cx="18" cy="28" r="4" fill="#ddd"/>
+    <circle cx="30" cy="28" r="4" fill="#ddd"/>
+    <circle cx="42" cy="28" r="4" fill="#ddd"/>
+    
+    <circle cx="18" cy="40" r="4" fill="#ddd"/>
+    <circle cx="30" cy="40" r="4" fill="#ddd"/>
+    <circle cx="42" cy="40" r="4" fill="#ddd"/>
+    
+    <circle cx="18" cy="52" r="4" fill="#ddd"/>
+    <circle cx="30" cy="52" r="4" fill="#ddd"/>
+    <circle cx="42" cy="52" r="4" fill="#f06"/> <!-- Кнопка "=" выделена цветом -->
+</svg>

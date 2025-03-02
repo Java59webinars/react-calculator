@@ -1,10 +1,6 @@
 import { TextField } from "@mui/material";
 import { themeStyles } from "../services/themes.ts";
 
-interface CalculatorInputProps {
-    inputValue: string | number;
-    setInputValue: (value: string | number) => void;
-}
 
 const CalculatorInput = ({ inputValue, setInputValue }: CalculatorInputProps) => {
     return (
