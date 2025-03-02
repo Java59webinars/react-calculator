@@ -1,6 +1,6 @@
 export class Calculator {
     currentValue: number = 0;
-    lastOperation: keyof Calculator | null = null;
+    lastOperation: string | null = null;
 
     operations: Record<string, { label: string; action?: (value: number) => void; className?: string }> = {
         add: { label: "+", action: (value) => this.currentValue += value  },
@@ -14,15 +14,15 @@ export class Calculator {
         reset: { label: "C", className: "cancel", action: () => this.reset() }, // Добавляем reset
     };
 
-    getActions(): { label: string; operation: keyof Calculator; className?: string }[] {
+    getActions(): { label: string; operation: string; className?: string }[] {
         return Object.entries(this.operations).map(([key, { label, className }]) => ({
             label,
-            operation: key as keyof Calculator,
+            operation: key,
             className,
         }));
     }
 
-    executeOperation(operation: keyof Calculator, value: number) {
+    executeOperation(operation: string, value: number) {
         const operationMethod = this.operations[operation]?.action;
         if (operationMethod) {
             operationMethod(value);
@@ -40,7 +40,7 @@ export class Calculator {
         return this.currentValue;
     }
 
-    setValues(value: number, operation: keyof Calculator) {
+    setValues(value: number, operation: string) {
         this.currentValue = value;
         this.lastOperation = operation;
     }

@@ -1,17 +1,35 @@
+import { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { useCalculatorLogic } from "../hooks/useCalculatorLogic";
-import Buttons from "../components/Buttons";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import ActionButtons from "../components/Buttons";
 import CustomTable from "../components/CustomTable";
 import CalculatorInput from "../components/CalculatorInput";
 import { logoutUser } from "../services/utils";
 import { themeStyles } from "../services/themes.ts";
+import { setInputValue } from "../redux/calculatorSlice";
 
 const CalculatorPage = () => {
-    const { inputValue, setInputValue, handleButtonClick, rows, userId, buttonData } = useCalculatorLogic();
+    const dispatch = useAppDispatch();
+    const { inputValue, rows } = useAppSelector((state) => state.calculator);
+
+    const [userId, setUserId] = useState<string | null>(null);
+
+    // Проверяем наличие userId в localStorage при монтировании
+    useEffect(() => {
+        const storedUserId = localStorage.getItem("userId");
+        console.log("🔹 Загруженный userId:", storedUserId); // 👀 Проверяем консоль
+        if (storedUserId && storedUserId.trim() !== "") {
+            setUserId(storedUserId);
+        }
+    }, []);
+
     const handleLogout = () => {
         logoutUser();
+        localStorage.removeItem("userId"); // Очистка userId
+        setUserId(null);
         window.location.href = "/login";
     };
+
     if (!userId) {
         return <Typography variant="h5" color="error">User is not authenticated</Typography>;
     }
@@ -21,8 +39,12 @@ const CalculatorPage = () => {
             <Button variant="outlined" color="error" onClick={handleLogout} sx={{ alignSelf: "flex-end" }}>
                 Logout
             </Button>
-            <CalculatorInput inputValue={inputValue} setInputValue={setInputValue} />
-            <Buttons buttonData={buttonData} onButtonClick={handleButtonClick} />
+
+            <CalculatorInput
+                inputValue={inputValue}
+                setInputValue={(value) => dispatch(setInputValue(value))}
+            />
+            <ActionButtons />
             <CustomTable rows={rows} />
         </Box>
     );

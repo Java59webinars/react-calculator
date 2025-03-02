@@ -1,27 +1,32 @@
-import {useState} from "react";
-import {Button, ButtonGroup} from "@mui/material";
-import {Calculator} from "../services/Calculator.ts";
-import {themeStyles} from "../services/themes.ts";
+import { Button, ButtonGroup } from "@mui/material";
+import { useAppDispatch, } from "../redux/hooks";
+import { executeOperation, resetCalculator } from "../redux/calculatorSlice";
+import { themeStyles } from "../services/themes.ts";
+import { Calculator } from "../services/Calculator.ts";
 
-const Buttons = ({buttonData, onButtonClick}: ButtonsProps) => {
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+const Buttons = () => {
+    const dispatch = useAppDispatch();
+    const calculator = new Calculator(); // 📌 Создаем экземпляр для получения кнопок
+    const buttonData = calculator.getActions();
 
     return (
-        <ButtonGroup aria-label="button group" sx={themeStyles.buttons.buttonGroup}>
+        <ButtonGroup sx={themeStyles.buttons.buttonGroup}>
             {buttonData.map((button, index) => {
-                const isActive = index === activeIndex;
                 const isCancel = button.className === "cancel";
 
                 return (
                     <Button
                         key={index}
-                        variant={isCancel ? "contained" : isActive ? "contained" : "outlined"}
-                        color={isCancel ? undefined : "primary"}
+                        variant={isCancel ? "contained" : "outlined"}
+                        color={isCancel ? "error" : "primary"}
                         onClick={() => {
-                            onButtonClick(button.operation as keyof Calculator);
-                            setActiveIndex(index);
+                            if (button.operation === "reset") {
+                                dispatch(resetCalculator());
+                            } else {
+                                dispatch(executeOperation({ operation: button.operation }));
+                            }
                         }}
-                        sx={isCancel ? themeStyles.buttons.cancelButton : isActive ? themeStyles.buttons.activeButton : themeStyles.buttons.defaultButton}
+                        sx={isCancel ? themeStyles.buttons.cancelButton : themeStyles.buttons.defaultButton}
                     >
                         {button.label}
                     </Button>
