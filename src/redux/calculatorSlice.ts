@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Calculator } from "../services/Calculator";
 import { saveToLocalStorage, loadFromLocalStorage } from "../services/storage";
+import {USER_ID_KEY} from "../services/utils.ts";
 
-const USER_ID_KEY = "USER_ID_KEY"; // Ключ для хранения userId
+
 
 const getUserId = () => localStorage.getItem(USER_ID_KEY); // Получаем userId
 

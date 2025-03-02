@@ -1,7 +1,6 @@
 export class Calculator {
     currentValue: number = 0;
     lastOperation: string | null = null;
-
     operations: Record<string, { label: string; action?: (value: number) => void; className?: string }> = {
         add: { label: "+", action: (value) => this.currentValue += value  },
         subtract: { label: "-", action: (value) => this.currentValue -= value },
