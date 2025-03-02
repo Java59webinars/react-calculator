@@ -1,6 +1,6 @@
 export const AUTH_TOKEN_KEY = "authToken";
 export const USER_ID_KEY = "userId";
-
+export const STORAGE_KEY = "calculator_rows";
 
 export const logoutUser = () => {
     localStorage.removeItem(AUTH_TOKEN_KEY);

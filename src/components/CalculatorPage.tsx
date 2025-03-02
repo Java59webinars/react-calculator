@@ -6,27 +6,27 @@ import CustomTable from "../components/CustomTable";
 import CalculatorInput from "../components/CalculatorInput";
 import { logoutUser } from "../services/utils";
 import { themeStyles } from "../services/themes.ts";
-import { setInputValue } from "../redux/calculatorSlice";
+import { setInputValue, setUserId } from "../redux/calculatorSlice";
+import { USER_ID_KEY } from "../services/utils"; // 🔹 Используем константу из utils
 
 const CalculatorPage = () => {
     const dispatch = useAppDispatch();
     const { inputValue, rows } = useAppSelector((state) => state.calculator);
 
-    const [userId, setUserId] = useState<string | null>(null);
+    const [userId, setUserIdState] = useState<string | null>(null);
 
-    // Проверяем наличие userId в localStorage при монтировании
     useEffect(() => {
-        const storedUserId = localStorage.getItem("userId");
-        console.log("🔹 Загруженный userId:", storedUserId); // 👀 Проверяем консоль
-        if (storedUserId && storedUserId.trim() !== "") {
-            setUserId(storedUserId);
-        }
-    }, []);
+        const storedUserId = localStorage.getItem(USER_ID_KEY);
+        console.log("🔹 Загруженный userId:", storedUserId);
+        setUserIdState(storedUserId);
+        dispatch(setUserId(storedUserId));
+    }, [dispatch]);
 
     const handleLogout = () => {
         logoutUser();
-        localStorage.removeItem("userId"); // Очистка userId
-        setUserId(null);
+        localStorage.removeItem(USER_ID_KEY); // 🔹 Используем константу
+        setUserIdState(null);
+        dispatch(setUserId(null));
         window.location.href = "/login";
     };
 
@@ -36,6 +36,8 @@ const CalculatorPage = () => {
 
     return (
         <Box sx={themeStyles.app.container}>
+            <Typography variant="h6">Пользователь: {userId}</Typography>
+
             <Button variant="outlined" color="error" onClick={handleLogout} sx={{ alignSelf: "flex-end" }}>
                 Logout
             </Button>
