@@ -9,7 +9,11 @@ export class Calculator {
                 if (value === 0) throw new Error("Cannot divide by zero");
                 this.currentValue /= value
             }},
-        calculate: { label: "=" }, // Добавляем calculate без action
+        calculate: { label: "=",
+            action: () => {
+                this.lastOperation = null; // Завершаем текущую операцию
+            }
+            }, // Добавляем calculate без action
         reset: { label: "C", className: "cancel", action: () => this.reset() }, // Добавляем reset
     };
 
